@@ -1,5 +1,6 @@
 package br.com.blz.testjava.core.usecase.impl;
 
+import br.com.blz.testjava.adapters.controller.util.exception.NotFoundException;
 import br.com.blz.testjava.core.domain.ProductDetails;
 import br.com.blz.testjava.core.domain.Warehouse;
 import br.com.blz.testjava.core.ports.FindInventoryPort;
@@ -58,12 +59,11 @@ public class FindProductServiceImplTest {
     }
 
     @Test
-    public void deveLancarExceptionQuandoProdutoNaoEncontrado() {
+    public void deveLancarExceptionProdutoNaoEncontrado() {
         Long sku = 123L;
-
         when(findProductPort.find(sku)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> findProductService.execute(sku));
+        assertThrows(NotFoundException.class, () -> findProductService.execute(sku));
     }
 
 

@@ -20,4 +20,13 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity(error, error.getStatus());
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<BaseError> handleGenericException(NotFoundException e){
+        BaseError error = new BaseError(HttpStatus.NOT_FOUND,"Controller exception: " + e.getMessage());
+
+        return new ResponseEntity(error,error.getStatus());
+    }
+
+
 }

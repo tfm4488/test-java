@@ -1,5 +1,6 @@
 package br.com.blz.testjava.core.usecase.impl;
 
+import br.com.blz.testjava.adapters.controller.util.exception.NotFoundException;
 import br.com.blz.testjava.core.domain.ProductDetails;
 import br.com.blz.testjava.core.domain.Warehouse;
 import br.com.blz.testjava.core.ports.FindInventoryPort;
@@ -24,7 +25,7 @@ public class FindProductServiceImpl implements FindProductService {
         Optional<ProductDetails> productDetails = findProductPort.find(sku);
 
         if(!productDetails.isPresent()){
-            throw new RuntimeException("Produto com o sku " + sku + " não encontrado");
+            throw new NotFoundException("Produto com o sku " + sku + " não encontrado");
         }
 
         Optional<List<Warehouse>> warehouses = findInventoryPort.find(sku);
@@ -38,10 +39,10 @@ public class FindProductServiceImpl implements FindProductService {
         }
 
         return FindProductServiceResponse.builder()
-            .productDetails(productDetails.get())
-            .warehouseList(warehouses.orElseGet(List::of))
-            .inventoryQuantity(inventoryQuantity)
-            .isMarketable(inventoryQuantity > 0L)
-            .build();
+                .productDetails(productDetails.get())
+                .warehouseList(warehouses.orElseGet(List::of))
+                .inventoryQuantity(inventoryQuantity)
+                .isMarketable(inventoryQuantity > 0L)
+                .build();
     }
 }

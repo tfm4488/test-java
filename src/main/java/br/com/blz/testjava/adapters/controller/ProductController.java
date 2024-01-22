@@ -19,9 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@Slf4j
 @RequestMapping("/products")
 public class ProductController {
 
@@ -45,7 +45,6 @@ public class ProductController {
     public ResponseEntity<String> createProduct (@RequestBody CreateProductRequest createProductRequest){
 
         requestValidator.validate(createProductRequest);
-        log.info("Payload recebido na entrada ", createProductRequest);
 
         ProductDetails productDetails = payloadConverter.toProductDetailsDomain(createProductRequest);
         List<Warehouse> warehouseList = payloadConverter.toWarehouseDomainList(createProductRequest);
@@ -62,18 +61,17 @@ public class ProductController {
     @GetMapping("/{sku}")
     public ResponseEntity<FindProductResponse> findBySku (@PathVariable Long sku){
 
-        log.info("SKU recebido na entrada ", sku);
         FindProductServiceResponse findProductServiceResponse = findProductService.execute(sku);
+
 
         FindProductResponse findProductResponse = payloadConverter.toFindProductResponse(sku, findProductServiceResponse);
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(findProductResponse);
+        return ResponseEntity.ok().body(findProductResponse);
     }
 
     @PutMapping("/{sku}")
     public ResponseEntity<String> updateProduct (@PathVariable Long sku, @RequestBody UpdateProductRequest updateProductRequest){
 
-        log.info("Payload recebido na entrada ", updateProductRequest);
         requestValidator.validate(updateProductRequest);
 
         ProductDetails productDetails = payloadConverter.toProductDetailsDomain(updateProductRequest);
@@ -86,7 +84,6 @@ public class ProductController {
     @DeleteMapping("/{sku}")
     public ResponseEntity<String> deleteProduct (@PathVariable Long sku){
 
-        log.info("SKU recebido na entrada ", sku);
         deleteProductService.execute(sku);
 
         return ResponseEntity.ok("Produto deletado com sucesso");
